@@ -97,11 +97,11 @@ const ProfileCard = ({ profile, onSaved }: ProfileCardProps) => {
       }`}
     >
       {/* Image */}
-      <div className="aspect-square overflow-hidden bg-muted">
+      <div className="aspect-square overflow-hidden bg-muted flex items-center justify-center">
         <img
           src={profile.image_url}
           alt={profile.name}
-          className="h-full w-full object-cover"
+          className="h-full w-full object-contain"
           loading="lazy"
         />
       </div>
