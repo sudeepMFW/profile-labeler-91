@@ -15,7 +15,7 @@ const VALID_USERS = [
     "Aravinth", "Daniel", "Manish", "Afjal",
     "Praveen", "Uday", "Venu", "Vinod"
 ];
-//login page
+//login pages
 
 const Login = () => {
     const [username, setUsername] = useState("");
