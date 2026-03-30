@@ -14,6 +14,18 @@ import { Check, Loader2 } from "lucide-react";
 
 const FIELDS = [
   {
+    key: "ethnicity" as const,
+    label: "Ethnicity",
+    options: ["white", "black", "asian", "brown"],
+    getDefault: (p: Profile) => p.image_attributes?.ethnicity,
+  },
+  {
+    key: "hair_color" as const,
+    label: "Hair Color",
+    options: ["black", "blonde", "white", "grey", "others"],
+    getDefault: (p: Profile) => p.image_attributes?.hair?.hair_color,
+  },
+  {
     key: "hair_style" as const,
     label: "Hair Style",
     options: ["straight", "curly"],
@@ -34,14 +46,80 @@ const FIELDS = [
   {
     key: "eye_size" as const,
     label: "Eye Size",
-    options: ["normal", "large", "small", "None"],
+    options: ["normal", "large", "small", "none"],
     getDefault: (p: Profile) => p.image_attributes?.eye_size,
   },
   {
     key: "skin_color" as const,
     label: "Skin Color",
-    options: ["white", "black", "brown"],
+    options: ["white", "black", "brown", "none"],
     getDefault: (p: Profile) => p.image_attributes?.skin_color,
+  },
+  {
+    key: "face_shape" as const,
+    label: "Face Shape",
+    options: ["oval", "round", "square", "diamond"],
+    getDefault: (p: Profile) => p.image_attributes?.face_shape,
+  },
+  {
+    key: "face_size" as const,
+    label: "Face Size",
+    options: ["large", "medium", "small"],
+    getDefault: (p: Profile) => p.image_attributes?.face_size,
+  },
+  {
+    key: "face_structure" as const,
+    label: "Face Structure",
+    options: ["symmetric", "asymmetric"],
+    getDefault: (p: Profile) => p.image_attributes?.face_structure,
+  },
+  {
+    key: "head_hair" as const,
+    label: "Head Hair",
+    options: ["present", "absent"],
+    getDefault: (p: Profile) => p.image_attributes?.head_hair,
+  },
+  {
+    key: "beard" as const,
+    label: "Beard",
+    options: ["stubble", "full", "goatee", "none"],
+    getDefault: (p: Profile) => p.image_attributes?.beard,
+  },
+  {
+    key: "mustache" as const,
+    label: "Mustache",
+    options: ["thin", "thick", "handlebar", "none"],
+    getDefault: (p: Profile) => p.image_attributes?.mustache,
+  },
+  {
+    key: "eyewear" as const,
+    label: "Eyewear",
+    options: ["prescription_glasses", "sunglasses", "none"],
+    getDefault: (p: Profile) => p.image_attributes?.accessories?.eyewear,
+  },
+  {
+    key: "headwear" as const,
+    label: "Headwear",
+    options: ["hat", "cap", "turban", "none"],
+    getDefault: (p: Profile) => p.image_attributes?.accessories?.headwear,
+  },
+  {
+    key: "eyebrow" as const,
+    label: "Eyebrow",
+    options: ["present", "absent", "normal"],
+    getDefault: (p: Profile) => p.image_attributes?.facial_features?.Eyebrow,
+  },
+  {
+    key: "attire" as const,
+    label: "Attire",
+    options: ["casual", "western", "traditional", "formal"],
+    getDefault: (p: Profile) => p.image_attributes?.attire,
+  },
+  {
+    key: "body_shape" as const,
+    label: "Body Shape",
+    options: ["fit", "slim", "fat", "none"],
+    getDefault: (p: Profile) => p.image_attributes?.body_shape,
   },
 ];
 
@@ -57,7 +135,8 @@ const ProfileCard = ({ profile, onSaved }: ProfileCardProps) => {
     const init: Record<string, string> = {};
     FIELDS.forEach((f) => {
       const def = f.getDefault(profile);
-      init[f.key] = def && f.options.includes(def) ? def : "";
+      const normalizedDef = def?.toLowerCase().replace("-", "").trim();
+      init[f.key] = normalizedDef && f.options.includes(normalizedDef) ? normalizedDef : "";
     });
     return init as Record<FieldKey, string>;
   });
@@ -70,14 +149,12 @@ const ProfileCard = ({ profile, onSaved }: ProfileCardProps) => {
     if (!allFilled) return;
     setSaving(true);
     try {
+      const user = localStorage.getItem("user") || "Unknown";
       const payload: UpdatePayload = {
         _id: profile._id,
         _collection: profile._collection,
-        hair_style: values.hair_style,
-        hair_length: values.hair_length,
-        eye_color: values.eye_color,
-        eye_size: values.eye_size,
-        skin_color: values.skin_color,
+        updated_by: user,
+        ...values
       };
       await updateProfile(payload);
       toast.success("Updated successfully");
@@ -92,9 +169,8 @@ const ProfileCard = ({ profile, onSaved }: ProfileCardProps) => {
 
   return (
     <div
-      className={`rounded-lg border border-border bg-card shadow-sm overflow-hidden transition-all duration-400 ${
-        saved ? "opacity-0 scale-95" : "opacity-100 scale-100"
-      }`}
+      className={`rounded-lg border border-border bg-card shadow-sm overflow-hidden transition-all duration-400 ${saved ? "opacity-0 scale-95" : "opacity-100 scale-100"
+        }`}
     >
       {/* Image */}
       <div className="aspect-square overflow-hidden bg-muted flex items-center justify-center">
@@ -134,9 +210,8 @@ const ProfileCard = ({ profile, onSaved }: ProfileCardProps) => {
                   }
                 >
                   <SelectTrigger
-                    className={`h-8 text-xs ${
-                      isEmpty ? "border-destructive/50 ring-1 ring-destructive/20" : ""
-                    }`}
+                    className={`h-8 text-xs ${isEmpty ? "border-destructive/50 ring-1 ring-destructive/20" : ""
+                      }`}
                   >
                     <SelectValue placeholder="Select..." />
                   </SelectTrigger>

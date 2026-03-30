@@ -8,11 +8,30 @@ export interface Profile {
   name: string;
   image_url: string;
   image_attributes: {
-    hair?: { hair_style?: string };
+    hair?: {
+      hair_style?: string;
+      hair_color?: string;
+    };
+    accessories?: {
+      eyewear?: string;
+      headwear?: string;
+    };
+    facial_features?: {
+      Eyebrow?: string;
+    };
     hair_length?: string;
     eye_color?: string;
     eye_size?: string;
     skin_color?: string;
+    face_shape?: string;
+    head_hair?: string;
+    beard?: string;
+    mustache?: string;
+    ethnicity?: string;
+    attire?: string;
+    body_shape?: string;
+    face_size?: string;
+    face_structure?: string;
   };
 }
 
@@ -33,11 +52,25 @@ export interface Stats {
 export interface UpdatePayload {
   _id: string;
   _collection: string;
-  hair_style: string;
-  hair_length: string;
-  eye_color: string;
-  eye_size: string;
-  skin_color: string;
+  updated_by: string;
+  face_shape?: string;
+  head_hair?: string;
+  beard?: string;
+  mustache?: string;
+  ethnicity?: string;
+  eye_color?: string;
+  attire?: string;
+  body_shape?: string;
+  skin_color?: string;
+  eye_size?: string;
+  face_size?: string;
+  face_structure?: string;
+  hair_length?: string;
+  hair_color?: string;
+  hair_style?: string;
+  eyewear?: string;
+  headwear?: string;
+  eyebrow?: string;
 }
 
 export const fetchProfiles = async (page = 1, pageSize = 40) => {
